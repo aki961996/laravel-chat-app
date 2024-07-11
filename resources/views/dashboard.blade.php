@@ -24,17 +24,15 @@
                                     </div>
                                     <div class="card-body">
 
-                                        <div class="chat-div">
-
+                                        {{-- will append vai jquery --}}
+                                        <div id="chat-container">
+                                            <!-- Messages will be appended here -->
                                         </div>
 
-
-
-
-                                        <input type="hidden" id="recever_id" name="recever_id" value="2">
+                                        <input type="hidden" id="receiver_id" name="receiver_id" value="1">
                                         <div data-mdb-input-init class="form-outline">
-                                            <textarea class="form-control bg-body-tertiary" id="message" rows="4"
-                                                placeholder="Type your message"></textarea>
+                                            <textarea class="form-control bg-body-tertiary" name="message" id="message"
+                                                rows="4" placeholder="Type your message"></textarea>
                                             <div class="mt-2" style="text-align: right">
                                                 <button class="btn btn-info btn-sm text-white btn-color"
                                                     id="sendBtn">Send</button>
@@ -61,10 +59,31 @@
 @vite('resources/js/app.js')
 
 <script type="module">
-    Echo.channel(`chat-room`)
-    .listen('MessageSent', (e) => {
-    console.log(e.message);
-    });
+    //     Echo.channel(`chat-room`)
+//     .listen('MessageSent', (e) => {
+//    console.log(e.message,'msg');
+//         if(e.message != null){
+        
+//         }
+       
+   
+//     });
+Echo.channel('chat-room')
+.listen('MessageSent', (e) => {
+console.log(e.message, 'msg');
+if (e.message != null) {
+// Assuming e.message has a sender_id property to distinguish between incoming and outgoing messages
+    $('#chat-container').append(`
+    <div class="d-flex flex-row justify-content-start mb-4">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
+            style="width: 45px; height: 100%;">
+        <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+            <p class="small mb-0">${e.message.message}.</p>
+        </div>
+    </div>
+    `);
+}
+});
 </script>
 
 <script>
@@ -77,15 +96,17 @@
             });
 
             $('#sendBtn').click(function(){
-                let message = $('#message').val();
-               let recever_id = $('#recever_id').val();
+               let message = $('#message').val();
+               let receiver_id = $('#receiver_id').val();
                
                 $.ajax({
                     url: "{{ route('send-message') }}", // Replace with your server endpoint
                     method: 'POST', // or 'GET' depending on your needs
-                    data: { message, recever_id},
+                    data: { message, receiver_id},
                     success: function(response) {
                         console.log(response);
+                        // Clear the input field
+                        $('#message').val('');
                         // alert('Success: ' + response.message);
                     },
                     error: function(xhr, status, error) {
