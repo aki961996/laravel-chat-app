@@ -29,7 +29,7 @@
                                             <!-- Messages will be appended here -->
                                         </div>
 
-                                        <input type="hidden" id="receiver_id" name="receiver_id" value="1">
+                                        <input type="hidden" id="receiver_id" name="receiver_id" value="2">
                                         <div data-mdb-input-init class="form-outline">
                                             <textarea class="form-control bg-body-tertiary" name="message" id="message"
                                                 rows="4" placeholder="Type your message"></textarea>
@@ -72,16 +72,36 @@ Echo.channel('chat-room')
 .listen('MessageSent', (e) => {
 console.log(e.message, 'msg');
 if (e.message != null) {
-// Assuming e.message has a sender_id property to distinguish between incoming and outgoing messages
+
+  let userId = "{{ auth()->id() }}";
+    if (e.message.sender_id == userId) {
     $('#chat-container').append(`
-    <div class="d-flex flex-row justify-content-start mb-4">
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
-            style="width: 45px; height: 100%;">
-        <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
-            <p class="small mb-0">${e.message.message}.</p>
-        </div>
+  <div class="d-flex flex-row justify-content-start mb-4">
+    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
+        style="width: 45px; height: 100%;">
+    <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+        <p class="small mb-0">${e.message.message}.</p>
     </div>
+</div>
     `);
+    } else if (e.message.receiver_id == userId) {
+    $('#chat-container').append(`
+   <div class="d-flex flex-row justify-content-end mb-4">
+    <div class="p-3 me-3 border bg-body-tertiary" style="border-radius: 15px;">
+        <p class="small mb-0">${e.message.message}.</p>
+    </div>
+    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
+        style="width: 45px; height: 100%;">
+</div>
+    `);
+    }
+
+
+
+
+
+
+   
 }
 });
 </script>
