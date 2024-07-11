@@ -29,7 +29,7 @@
                                             <!-- Messages will be appended here -->
                                         </div>
 
-                                        <input type="hidden" id="receiver_id" name="receiver_id" value="2">
+                                        <input type="hidden" id="receiver_id" name="receiver_id" value="1">
                                         <div data-mdb-input-init class="form-outline">
                                             <textarea class="form-control bg-body-tertiary" name="message" id="message"
                                                 rows="4" placeholder="Type your message"></textarea>
